@@ -309,3 +309,5 @@ The following block is synchronized from `package.json` by `pnpm readme:sync`. I
 | `pnpm proof:upstream`   | `node tooling/scripts/proof-upstream.mjs`                                                                        |
 
 <!-- commands:end -->
+
+Made with ❤️ by Ri Sean Smal • Released under MIT License
