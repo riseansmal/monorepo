@@ -1,0 +1,56 @@
+{
+  "name": "hello-typescript",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "sandbox/hello-typescript/src",
+  "projectType": "application",
+  "tags": ["scope:sandbox", "type:tool", "deploy:none"],
+  "metadata": {
+    "technology": "typescript-node",
+    "deployment": "local-demo"
+  },
+  "targets": {
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "sandbox/hello-typescript",
+        "command": "pnpm exec eslint src tests"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "sandbox/hello-typescript",
+        "command": "pnpm exec tsc --noEmit"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": ".",
+        "command": "pnpm exec vitest run sandbox/hello-typescript/tests"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "sandbox/hello-typescript",
+        "command": "pnpm exec tsc"
+      },
+      "outputs": ["{projectRoot}/dist"]
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "sandbox/hello-typescript",
+        "command": "pnpm exec tsx src/main.ts"
+      }
+    },
+    "deploy": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node tooling/scripts/deploy.mjs hello-typescript {args.environment} {args.ref}",
+        "forwardAllArgs": false
+      }
+    }
+  }
+}

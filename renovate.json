@@ -1,0 +1,37 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":pinDevDependencies",
+    "helpers:pinGitHubActionDigests"
+  ],
+  "prConcurrentLimit": 3,
+  "minimumReleaseAge": "7 days",
+  "automerge": false,
+  "packageRules": [
+    {
+      "matchPackageNames": ["nx", "@nx/**"],
+      "groupName": "nx toolchain"
+    },
+    {
+      "matchPackageNames": [
+        "eslint",
+        "@eslint/**",
+        "typescript",
+        "typescript-eslint"
+      ],
+      "groupName": "typescript lint toolchain"
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "groupName": "github actions"
+    }
+  ],
+  "lockFileMaintenance": {
+    "enabled": true
+  },
+  "dependencyDashboardApproval": true,
+  "prBodyNotes": [
+    "monorepo requires developer adoption: add a covering canonical changeset and set its derived message as the PR title. See docs/change-control.md. Bot dependency commits receive only the narrowly validated dependency-message exception; quality and intent gates remain required."
+  ]
+}

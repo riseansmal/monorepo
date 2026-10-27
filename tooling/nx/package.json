@@ -1,0 +1,19 @@
+{
+  "name": "@template/nx",
+  "version": "0.1.0",
+  "private": true,
+  "generators": "./generators.json",
+  "exports": {
+    ".": "./src/generate.mjs",
+    "./metadata": "./src/metadata.mjs",
+    "./package.json": "./package.json",
+    "./generators.json": "./generators.json",
+    "./testing": "./src/test-environment.mjs"
+  },
+  "dependencies": {
+    "@nx/devkit": "23.2.1",
+    "yaml": "2.9.0",
+    "prettier": "3.9.6",
+    "typescript": "6.0.3"
+  }
+}

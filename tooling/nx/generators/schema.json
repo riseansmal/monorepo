@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/schema",
+  "type": "object",
+  "properties": {
+    "kind": {
+      "type": "string",
+      "enum": ["sandbox", "project", "system", "package"],
+      "default": "sandbox"
+    },
+    "name": {
+      "type": "string"
+    },
+    "technology": {
+      "type": "string",
+      "enum": [
+        "typescript-node",
+        "fastify",
+        "nextjs",
+        "python",
+        "rust",
+        "tauri",
+        "expo",
+        "swift",
+        "infra",
+        "asset"
+      ]
+    },
+    "scope": {
+      "type": "string"
+    },
+    "system": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string"
+    },
+    "deploy": {
+      "type": "string"
+    },
+    "context": {
+      "type": "boolean"
+    },
+    "database": {
+      "type": "boolean"
+    },
+    "queue": {
+      "type": "boolean"
+    },
+    "docker": {
+      "type": "boolean"
+    },
+    "ml": {
+      "type": "boolean"
+    },
+    "notebook": {
+      "type": "boolean"
+    },
+    "discardGenerated": {
+      "type": "boolean"
+    }
+  },
+  "required": ["name"],
+  "additionalProperties": false
+}

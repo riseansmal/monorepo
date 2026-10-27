@@ -1,0 +1,4 @@
+target-version = "py314"
+line-length = 88
+[lint]
+select = ["E", "F", "I", "UP", "B"]

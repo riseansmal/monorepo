@@ -1,0 +1,17 @@
+name: quality tools
+description: Install pinned native CI validators from their upstream release archives
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: |
+        set -euo pipefail
+        tools_dir="$(mktemp -d "$RUNNER_TEMP/monorepo-tools.XXXXXX")"
+        cd "$tools_dir"
+        curl -fsSLO https://github.com/gitleaks/gitleaks/releases/download/v8.30.1/gitleaks_8.30.1_linux_x64.tar.gz
+        echo '551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb  gitleaks_8.30.1_linux_x64.tar.gz' | sha256sum -c -
+        tar -xzf gitleaks_8.30.1_linux_x64.tar.gz gitleaks
+        curl -fsSLO https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_1.7.12_linux_amd64.tar.gz
+        echo '8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8  actionlint_1.7.12_linux_amd64.tar.gz' | sha256sum -c -
+        tar -xzf actionlint_1.7.12_linux_amd64.tar.gz actionlint
+        echo "$tools_dir" >> "$GITHUB_PATH"

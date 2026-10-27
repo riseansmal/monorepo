@@ -1,0 +1,71 @@
+{
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "defaultBase": "main",
+  "namedInputs": {
+    "default": ["{projectRoot}/**/*", "sharedGlobals"],
+    "production": ["default"],
+    "sharedGlobals": [
+      "{workspaceRoot}/package.json",
+      "{workspaceRoot}/pnpm-lock.yaml",
+      "{workspaceRoot}/monorepo.consumer.json",
+      "{workspaceRoot}/nx.json",
+      "{workspaceRoot}/tsconfig.base.json",
+      "{workspaceRoot}/eslint.config.mjs",
+      "{workspaceRoot}/vitest.config.ts",
+      "{workspaceRoot}/tooling/scripts/**/*",
+      "{workspaceRoot}/tooling/python/**/*",
+      "{workspaceRoot}/rust-toolchain.toml",
+      "{workspaceRoot}/.node-version",
+      "{workspaceRoot}/pnpm-workspace.yaml",
+      "{workspaceRoot}/.npmrc",
+      "{workspaceRoot}/commitlint.config.mjs",
+      "{workspaceRoot}/prettier.config.mjs",
+      "{workspaceRoot}/.changeset/**/*",
+      "{workspaceRoot}/.github/**/*",
+      "{workspaceRoot}/.husky/*",
+      "{workspaceRoot}/.gitignore",
+      "{workspaceRoot}/.dockerignore",
+      "{workspaceRoot}/.prettierignore",
+      "{workspaceRoot}/renovate.json",
+      "{workspaceRoot}/AGENTS.md",
+      "{workspaceRoot}/tooling/change-control/**/*",
+      "{workspaceRoot}/tooling/schemas/**/*",
+      "{workspaceRoot}/tooling/nx/**/*",
+      "{workspaceRoot}/tooling/toolchains.json",
+      "{workspaceRoot}/.nvmrc"
+    ]
+  },
+  "targetDefaults": {
+    "lint": {
+      "cache": true,
+      "inputs": ["default", "^default"]
+    },
+    "typecheck": {
+      "cache": true,
+      "inputs": ["default", "^default"]
+    },
+    "test": {
+      "cache": true,
+      "inputs": ["default", "^default"]
+    },
+    "build": {
+      "cache": true,
+      "inputs": ["production", "^production"],
+      "dependsOn": ["^build"]
+    },
+    "deploy": {
+      "cache": false
+    },
+    "run": {
+      "cache": false
+    },
+    "dev": {
+      "cache": false
+    }
+  },
+  "pluginsConfig": {
+    "@nx/js": {
+      "analyzeSourceFiles": true
+    }
+  }
+}

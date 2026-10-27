@@ -1,0 +1,67 @@
+name: manual deployment
+on:
+  workflow_dispatch:
+    inputs:
+      project:
+        type: choice
+        options: [hello-typescript]
+        required: true
+      environment:
+        type: choice
+        options: [dev, staging, prod]
+        required: true
+      ref:
+        description: Reviewed Git ref or commit
+        type: string
+        required: true
+permissions:
+  contents: read
+jobs:
+  demo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: ${{ inputs.environment }}
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          ref: ${{ inputs.ref }}
+          fetch-depth: 0
+      - name: Require a reviewed main ancestor
+        run: git merge-base --is-ancestor HEAD origin/main
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version-file: .node-version
+          # pnpm is installed below; setup-node must not probe it for caching yet.
+          package-manager-cache: false
+      - name: Install integrity-pinned pnpm
+        run: |
+          node tooling/scripts/install-pnpm.mjs
+          echo "$GITHUB_WORKSPACE/.local/bin" >> "$GITHUB_PATH"
+      - uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff # v6
+        with:
+          version: 0.12.10
+      - run: rustup show
+      - uses: ./.github/actions/quality-tools
+      - run: pnpm install --frozen-lockfile
+      - name: Discover required native CI tools
+        id: native
+        run: node tooling/scripts/ci-native.mjs
+      - name: Install OpenTofu for actual infrastructure projects
+        if: steps.native.outputs.infra == 'true'
+        uses: opentofu/setup-opentofu@a1320f892987e89d278cc92dc5adc984fb93aca4 # v2.0.2
+        with:
+          tofu_version: 1.12.6
+          tofu_wrapper: false
+          checksums: 5dc43da4f750f33873dc25e94587128709e819e544b7be9016b255316153c3a8
+      - name: Install Ansible for actual infrastructure projects
+        if: steps.native.outputs.infra == 'true'
+        run: |
+          uv tool install 'ansible-core==2.21.3'
+          uv tool dir --bin >> "$GITHUB_PATH"
+      - run: pnpm tooling:setup
+      - run: pnpm check && pnpm build
+      - name: Run validated demonstration target
+        env:
+          PROJECT: ${{ inputs.project }}
+          ENVIRONMENT: ${{ inputs.environment }}
+        run: pnpm nx run "$PROJECT:deploy" --environment="$ENVIRONMENT" --ref="$(git rev-parse HEAD)"

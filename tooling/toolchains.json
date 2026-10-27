@@ -1,0 +1,29 @@
+{
+  "pnpmVersion": "12.3.4",
+  "pnpm": {
+    "linux-x64": {
+      "tarball": "https://registry.npmjs.org/@pnpm/exe.linux-x64/-/exe.linux-x64-12.3.4.tgz",
+      "integrity": "sha512-2ZqOlSPkfwX1h5cR+FPiWf8+F+2hZT/3TvhUK5sigHqwaQCIiq8R7CGxhndKs63JtcLi2a1Qpo+wX/EoyfjyJQ=="
+    },
+    "darwin-arm64": {
+      "tarball": "https://registry.npmjs.org/@pnpm/exe.darwin-arm64/-/exe.darwin-arm64-12.3.4.tgz",
+      "integrity": "sha512-PAyUol8T1+/+ViOiXAt51ECA+QnfXCqz6foL4bW+LsoX0NcVd5XVEM2mRQu+LV4oc7uRz9zf9U0P+XFfuQeDAw=="
+    },
+    "linux-arm64": {
+      "tarball": "https://registry.npmjs.org/@pnpm/exe.linux-arm64/-/exe.linux-arm64-12.3.4.tgz",
+      "integrity": "sha512-t71AVA7LRqiKTyZ5xMYaZc2n5DfdpMbfokZuiIOXHBOM03ECnF0t4iYwaBDqJgVjlKYUOwaF/bRQajGNA4cJ4w=="
+    },
+    "darwin-x64": {
+      "tarball": "https://registry.npmjs.org/@pnpm/exe.darwin-x64/-/exe.darwin-x64-12.3.4.tgz",
+      "integrity": "sha512-fxP9JCk0Cdye+ePuj+GJJLMUMTqHGWRdb1dtv4How876uQ2ehxvenpgiYAir/ceO9PsYUZkFTtyZdx+rRu5QOA=="
+    }
+  },
+  "nodeImage": {
+    "version": "24.21.0",
+    "reference": "node:24.21.0-slim@sha256:2fe369e969550cde8e867afc3fe370b260140cab4a23d467074295b42163d553"
+  },
+  "proofImages": {
+    "postgres": "postgres:17-alpine@sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+    "redis": "redis:7-alpine@sha256:d9436322172a5b482c187bf1f363d3c4fea086fcca6b9c8a94de8f0f39ed3193"
+  }
+}

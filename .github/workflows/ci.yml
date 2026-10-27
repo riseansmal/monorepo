@@ -1,0 +1,101 @@
+name: ci
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+  push:
+    branches: [main]
+permissions:
+  contents: read
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version-file: .node-version
+          # pnpm is installed below; setup-node must not probe it for caching yet.
+          package-manager-cache: false
+      - name: Install integrity-pinned pnpm
+        run: |
+          node tooling/scripts/install-pnpm.mjs
+          echo "$GITHUB_WORKSPACE/.local/bin" >> "$GITHUB_PATH"
+      - uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff # v6
+        with:
+          version: 0.12.10
+          enable-cache: true
+      - run: rustup show
+      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: .nx/cache
+          key: nx-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml', '**/uv.lock', '**/Cargo.lock') }}-${{ github.sha }}
+          restore-keys: nx-${{ runner.os }}-
+      - uses: ./.github/actions/quality-tools
+      - run: pnpm install --frozen-lockfile
+      - name: Discover required native CI tools
+        id: native
+        run: node tooling/scripts/ci-native.mjs
+      - name: Install OpenTofu for actual infrastructure projects
+        if: steps.native.outputs.infra == 'true'
+        uses: opentofu/setup-opentofu@a1320f892987e89d278cc92dc5adc984fb93aca4 # v2.0.2
+        with:
+          tofu_version: 1.12.6
+          tofu_wrapper: false
+          checksums: 5dc43da4f750f33873dc25e94587128709e819e544b7be9016b255316153c3a8
+      - name: Install Ansible for actual infrastructure projects
+        if: steps.native.outputs.infra == 'true'
+        run: |
+          uv tool install 'ansible-core==2.21.3'
+          uv tool dir --bin >> "$GITHUB_PATH"
+      - run: pnpm tooling:setup
+      - name: Resolve affected base and head
+        env:
+          PR_BASE: ${{ github.event.pull_request.base.sha }}
+          PUSH_BEFORE: ${{ github.event.before }}
+        run: |
+          base="${PR_BASE:-$PUSH_BEFORE}"
+          if [ -z "$base" ] || ! git cat-file -e "$base^{commit}" 2>/dev/null; then
+            base="$(git hash-object -t tree /dev/null)"
+            echo "NX_ALL=true" >> "$GITHUB_ENV"
+          fi
+          echo "NX_BASE=$base" >> "$GITHUB_ENV"
+          echo "NX_HEAD=$GITHUB_SHA" >> "$GITHUB_ENV"
+      - run: pnpm check:workspace
+      - name: Validate and build affected projects
+        run: |
+          if [ "${NX_ALL:-false}" = true ]; then
+            pnpm lint
+            pnpm typecheck
+            pnpm test
+            pnpm build
+          else
+            pnpm affected:check --base="$NX_BASE" --head="$NX_HEAD"
+          fi
+      - name: Validate pull request change intent
+        if: github.event_name == 'pull_request'
+        env:
+          PR_BASE: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD: ${{ github.event.pull_request.head.sha }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          PR_BRANCH: ${{ github.head_ref }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          if [ "$PR_AUTHOR" = 'github-actions[bot]' ] && [ "$PR_BRANCH" = 'changeset-release/main' ]; then
+            pnpm change:validate --version-since="$PR_BASE"
+          else
+            pnpm change:validate --since="$PR_BASE"
+            pnpm changeset:status --since="$PR_BASE"
+          fi
+          node tooling/change-control/ci-commits.mjs --base="$PR_BASE" --head="$PR_HEAD" --author="$PR_AUTHOR" --event=pull_request
+          printf '%s\n' "$PR_TITLE" | pnpm exec commitlint
+      - name: Validate pushed commits
+        if: github.event_name == 'push'
+        env:
+          PUSH_BEFORE: ${{ github.event.before }}
+        run: node tooling/change-control/ci-commits.mjs --base="$PUSH_BEFORE" --head="$GITHUB_SHA" --event=push

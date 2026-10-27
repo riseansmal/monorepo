@@ -1,0 +1,45 @@
+name: reviewed internal version PR
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: write
+  pull-requests: write
+concurrency:
+  group: monorepo-version
+jobs:
+  version:
+    # Disabled until the developer explicitly approves bot commits/PR creation.
+    if: vars.MONOREPO_VERSION_PRS == 'enabled'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version-file: .node-version
+          # pnpm is installed below; setup-node must not probe it for caching yet.
+          package-manager-cache: false
+      - name: Install integrity-pinned pnpm
+        run: |
+          node tooling/scripts/install-pnpm.mjs
+          echo "$GITHUB_WORKSPACE/.local/bin" >> "$GITHUB_PATH"
+      - run: pnpm install --frozen-lockfile
+      - id: identity
+        run: node tooling/change-control/cli.mjs version-message
+      - id: versions
+        uses: changesets/action@a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d # v1
+        with:
+          version: pnpm version:packages
+          title: ${{ steps.identity.outputs.message }}
+          commit: ${{ steps.identity.outputs.message }}
+          createGithubReleases: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HUSKY: '0'
+      - name: Explain required human CI trigger
+        if: steps.versions.outputs.pullRequestNumber != ''
+        run: echo 'A developer must close and reopen the version PR after each bot update to trigger the required PR workflows; GITHUB_TOKEN events do not trigger them. Do not merge without green checks.' >> "$GITHUB_STEP_SUMMARY"

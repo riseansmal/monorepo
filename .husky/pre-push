@@ -1,0 +1,2 @@
+#!/bin/sh
+node tooling/scripts/upstream-guard.mjs "$1" "$2"

@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Future runtime agent permission declaration",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["name", "permissions"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "permissions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "tools",
+        "network",
+        "dataSources",
+        "secrets",
+        "filesystem",
+        "deployments"
+      ],
+      "properties": {
+        "tools": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^[^*?\\[\\]{}\\\\]+$"
+          },
+          "default": [],
+          "uniqueItems": true,
+          "description": "Explicit literal grants only; wildcard expansion is forbidden. Empty means no access."
+        },
+        "network": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^https?://[a-zA-Z0-9.-]+(:[0-9]+)?(/[^*?\\[\\]{}\\\\]*)?$"
+          },
+          "default": [],
+          "uniqueItems": true,
+          "description": "Explicit literal grants only; wildcard expansion is forbidden. Empty means no access."
+        },
+        "dataSources": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^[^*?\\[\\]{}\\\\]+$"
+          },
+          "default": [],
+          "uniqueItems": true,
+          "description": "Explicit literal grants only; wildcard expansion is forbidden. Empty means no access."
+        },
+        "secrets": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^[^*?\\[\\]{}\\\\]+$"
+          },
+          "default": [],
+          "uniqueItems": true,
+          "description": "Explicit literal grants only; wildcard expansion is forbidden. Empty means no access."
+        },
+        "filesystem": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^(?!.*(?:^|/)\\.\\.(?:/|$))[^*?\\[\\]{}\\\\]+$"
+          },
+          "default": [],
+          "uniqueItems": true,
+          "description": "Explicit literal grants only; wildcard expansion is forbidden. Empty means no access."
+        },
+        "deployments": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^[^*?\\[\\]{}\\\\]+$"
+          },
+          "default": [],
+          "uniqueItems": true,
+          "description": "Explicit literal grants only; wildcard expansion is forbidden. Empty means no access."
+        }
+      }
+    }
+  }
+}

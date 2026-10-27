@@ -1,0 +1,30 @@
+packages:
+  - packages/**
+  - sandbox/**
+  - scopes/**
+  - tooling/**
+allowBuilds:
+  esbuild: true
+  nx: true
+minimumReleaseAgeStrict: true
+strictPeerDependencies: true
+overrides:
+  # Nx exact transitive pins need security patches; remove as Nx adopts fixed versions.
+  # GHSA-7w5x-hrqm-74c2 and GHSA-r4xh-jqrq-34v2.
+  nx@23.2.1>smol-toml: 1.9.0
+  # GHSA-q2hr-2g5m-vwhr (also fixes earlier recursive-expansion advisories).
+  nx@23.2.1>brace-expansion: 5.0.12
+  # GHSA-r4gj-5m52-g5wh and the other Axios 1.20.0 security fixes.
+  nx@23.2.1>axios: 1.20.0
+  # GHSA-q3jh-wrc6-jgq8 and GHSA-8r9p-f939-6h3c.
+  nx@23.2.1>follow-redirects: 1.16.1
+  # GHSA-pqg4-j6r4-53mv: retain the minimum fixed minor for editor integration.
+  launch-editor@2.14.2>shell-quote: 1.11.0
+
+engineStrict: true
+saveExact: true
+# Explicit frozen installs own dependency changes; never auto-install on script execution.
+verifyDepsBeforeRun: false
+minimumReleaseAge: 1440
+pmOnFail: error
+runtimeOnFail: error

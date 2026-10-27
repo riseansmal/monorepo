@@ -1,0 +1,48 @@
+{
+  "name": "hello-python",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "sandbox/hello-python/src",
+  "projectType": "application",
+  "tags": ["scope:sandbox", "type:tool", "deploy:none"],
+  "metadata": {
+    "technology": "python"
+  },
+  "targets": {
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "sandbox/hello-python",
+        "command": "uv run --locked ruff check . && uv run --locked ruff format --check ."
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "sandbox/hello-python",
+        "command": "uv run --locked pyright"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "sandbox/hello-python",
+        "command": "uv run --locked pytest"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "sandbox/hello-python",
+        "command": "uv run --locked python -m hatchling build"
+      },
+      "outputs": ["{projectRoot}/dist"]
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "sandbox/hello-python",
+        "command": "uv run --locked python -m hello_python"
+      }
+    }
+  }
+}

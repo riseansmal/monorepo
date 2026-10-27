@@ -1,0 +1,80 @@
+{
+  "name": "monorepo",
+  "description": "an actively maintained full-stack monorepo, built to share improvements across projects.",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@12.3.4",
+  "engines": {
+    "node": "24.21.0"
+  },
+  "scripts": {
+    "tooling:setup": "node tooling/scripts/setup.mjs",
+    "prepare": "husky",
+    "dev": "node tooling/scripts/nx.mjs run hello-typescript:dev",
+    "check": "pnpm check:workspace && pnpm lint && pnpm typecheck && pnpm test",
+    "format": "prettier . --write",
+    "format:check": "prettier . --check",
+    "config:check": "node tooling/scripts/validate.mjs",
+    "lint": "node tooling/scripts/nx.mjs run-many -t lint",
+    "typecheck": "node tooling/scripts/nx.mjs run-many -t typecheck",
+    "test": "node tooling/scripts/nx.mjs run-many -t test",
+    "build": "node tooling/scripts/nx.mjs run-many -t build",
+    "affected:check": "node tooling/scripts/affected.mjs",
+    "graph": "node tooling/scripts/nx.mjs graph",
+    "new": "node tooling/nx/src/cli.mjs new",
+    "promote": "node tooling/nx/src/cli.mjs promote",
+    "changeset": "node tooling/change-control/cli.mjs create",
+    "changeset:status": "changeset status",
+    "change:validate": "node tooling/change-control/cli.mjs validate",
+    "change:inspect": "node tooling/change-control/cli.mjs inspect",
+    "commit:preview": "node tooling/change-control/cli.mjs preview",
+    "commit:validate": "commitlint",
+    "version:packages": "node tooling/change-control/cli.mjs version",
+    "readme:sync": "node tooling/scripts/readme.mjs",
+    "security:check": "node tooling/scripts/security.mjs",
+    "capabilities": "node tooling/scripts/capabilities.mjs",
+    "deploy:demo": "node tooling/scripts/deploy.mjs",
+    "bootstrap": "node tooling/scripts/runtime.mjs && pnpm install --frozen-lockfile && pnpm tooling:setup",
+    "proof:generators": "node tooling/scripts/proof-generators.mjs",
+    "proof:reproduce": "node tooling/scripts/reproduce.mjs",
+    "security:history": "node tooling/scripts/security.mjs --history",
+    "check:workspace": "pnpm format:check && pnpm config:check && pnpm change:validate && pnpm security:check && pnpm security:history",
+    "adopt": "node tooling/scripts/adopt.mjs",
+    "proof:upstream": "node tooling/scripts/proof-upstream.mjs"
+  },
+  "devDependencies": {
+    "nx": "23.2.1",
+    "@nx/devkit": "23.2.1",
+    "@nx/eslint-plugin": "23.2.1",
+    "@template/nx": "workspace:*",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.70.0",
+    "eslint": "10.10.0",
+    "@eslint/js": "10.0.1",
+    "eslint-config-prettier": "10.1.8",
+    "prettier": "3.9.6",
+    "vitest": "5.0.3",
+    "vite": "8.2.4",
+    "@playwright/test": "1.63.0",
+    "@changesets/cli": "3.0.2",
+    "@commitlint/cli": "21.2.2",
+    "@commitlint/config-conventional": "21.2.2",
+    "husky": "9.1.7",
+    "lint-staged": "17.5.1",
+    "zod": "4.6.6",
+    "tsx": "4.23.13",
+    "yaml": "2.9.0",
+    "@types/node": "24.13.4",
+    "ajv": "8.20.0"
+  },
+  "lint-staged": {
+    "*.{js,mjs,cjs,ts,tsx,json,yml,yaml,md}": "prettier --check"
+  },
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "24.21.0",
+      "onFail": "error"
+    }
+  }
+}

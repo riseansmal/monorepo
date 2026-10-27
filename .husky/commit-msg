@@ -1,0 +1,2 @@
+#!/bin/sh
+node tooling/change-control/cli.mjs message "$1"

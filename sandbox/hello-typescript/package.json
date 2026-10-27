@@ -1,0 +1,9 @@
+{
+  "name": "@template/hello-typescript",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./dist/src/index.js"
+  }
+}

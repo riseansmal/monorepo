@@ -1,0 +1,48 @@
+{
+  "name": "hello-rust",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "sandbox/hello-rust/src",
+  "projectType": "application",
+  "tags": ["scope:sandbox", "type:tool", "deploy:none"],
+  "metadata": {
+    "technology": "rust"
+  },
+  "targets": {
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "sandbox/hello-rust",
+        "command": "cargo fmt --check && cargo clippy --locked --all-targets --all-features -- -D warnings"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "sandbox/hello-rust",
+        "command": "cargo check --locked --all-targets"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "sandbox/hello-rust",
+        "command": "cargo test --locked"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "sandbox/hello-rust",
+        "command": "cargo build --locked --release"
+      },
+      "outputs": ["{projectRoot}/target/release"]
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "sandbox/hello-rust",
+        "command": "cargo run --locked"
+      }
+    }
+  }
+}

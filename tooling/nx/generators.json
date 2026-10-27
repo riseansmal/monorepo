@@ -1,0 +1,14 @@
+{
+  "generators": {
+    "new": {
+      "factory": "./generators/new.cjs",
+      "schema": "./generators/schema.json",
+      "description": "Create a project or system in monorepo"
+    },
+    "promote": {
+      "factory": "./generators/promote.cjs",
+      "schema": "./generators/schema.json",
+      "description": "Promote a sandbox project"
+    }
+  }
+}

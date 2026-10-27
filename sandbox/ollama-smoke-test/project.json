@@ -1,0 +1,55 @@
+{
+  "name": "ollama-smoke-test",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "sandbox/ollama-smoke-test/src",
+  "projectType": "application",
+  "tags": ["scope:sandbox", "type:tool", "deploy:none"],
+  "metadata": {
+    "technology": "typescript-node"
+  },
+  "targets": {
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "sandbox/ollama-smoke-test",
+        "command": "pnpm exec eslint src tests"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "sandbox/ollama-smoke-test",
+        "command": "pnpm exec tsc --noEmit"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": ".",
+        "command": "pnpm exec vitest run sandbox/ollama-smoke-test/tests"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "sandbox/ollama-smoke-test",
+        "command": "pnpm exec tsc"
+      },
+      "outputs": ["{projectRoot}/dist"]
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "sandbox/ollama-smoke-test",
+        "command": "pnpm exec tsx src/main.ts"
+      }
+    },
+    "run": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "sandbox/ollama-smoke-test",
+        "command": "pnpm exec tsx src/main.ts"
+      }
+    }
+  }
+}

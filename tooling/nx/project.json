@@ -1,0 +1,26 @@
+{
+  "name": "template-nx",
+  "root": "tooling/nx",
+  "tags": ["scope:shared", "type:tool", "deploy:none"],
+  "targets": {
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "eslint tooling/nx"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "vitest run tooling/nx"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node --check tooling/nx/src/generate.mjs"
+      }
+    }
+  },
+  "projectType": "library"
+}

@@ -1,0 +1,25 @@
+{
+  "name": "foundation-tooling",
+  "root": "tooling",
+  "tags": ["scope:shared", "type:tool", "deploy:none"],
+  "targets": {
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "eslint tooling/change-control tooling/scripts *.mjs *.ts"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "vitest run tooling/change-control tooling/scripts"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node --check tooling/change-control/cli.mjs"
+      }
+    }
+  }
+}

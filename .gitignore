@@ -1,0 +1,36 @@
+/node_modules/
+/.nx/
+/.local/
+/.idea/
+.DS_Store
+**/*.pyc
+**/*.tsbuildinfo
+**/*.xcuserstate
+**/xcuserdata/
+**/*.tfstate
+**/*.tfstate.*
+**/*.tfplan
+**/*.safetensors
+**/*.gguf
+**/*.pt
+**/*.pth
+# Sensitive local configuration: source-like directory names are never ignored globally.
+.env
+.env.*
+!.env.example
+.envrc
+.direnv/
+*.pem
+*.key
+id_rsa*
+*.tfvars
+.idea/
+
+# Universal dependency/cache fallbacks; source-like output names stay project-anchored.
+**/node_modules/
+**/.venv/
+**/__pycache__/
+**/.pytest_cache/
+**/.ruff_cache/
+**/.mypy_cache/
+**/.nx/
